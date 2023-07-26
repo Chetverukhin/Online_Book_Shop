@@ -1,0 +1,148 @@
+﻿@model RoleViewModel
+
+<style>
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+
+    .role {
+        display: flex;
+    }
+
+    img {
+        height: 50vh;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    li {
+        display: grid;
+        grid-template-columns: 200px auto;
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .title-info,
+    li input {
+        width: 100%;
+    }
+
+    span {
+        display: inline-flex;
+        width: 220px;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+    }
+
+    title-name {
+        font-weight: bold;
+        align-items: center;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: brown;
+        border-color: brown;
+    }
+
+    .btn-info:hover {
+        color: brown;
+        font-weight: bold;
+        background-color: #ffffff;
+        border-color: brown;
+    }
+    .btn-info:not(:disabled):not(.disabled).active, .btn-info:not(:disabled):not(.disabled):active, .show>.btn-info.dropdown-toggle {
+        color: #fff;
+        background-color: brown;
+        border-color: brown;
+    }
+    .error-message, .user-info {
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+    .validation {
+        list-style-type: none;
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+</style>
+
+<!-- Confirm Changing User Role-->
+<form asp-area="Admin" asp-controller="Users" asp-action="SetRole" method="post">
+    
+    <!-- View Changing User Role-->
+
+    <section class="role">
+
+        <div class="title-info">
+            <ul>
+                <li>
+                    <input type="hidden" value="@Model.UserId" asp-for="UserId"/>
+                </li>
+                <li>
+                    <span>Название текущей роли</span>
+                    <input type="hidden" asp-for="CurrentName" value="@Model.CurrentName"></input>
+                    <p style="color: #a52a2a;font-weight: bold">@Model.CurrentName</p>
+                </li>
+                <li>
+                    <span>Название новой роли</span>
+                    <select asp-for="@Model.Name" asp-items="@Model.RoleSelectListItems"></select>
+                    <span class="error-message" asp-validation-for="Name"></span>
+                </li>
+
+                <li>
+                    <span>Описание роли</span>
+                    <input value="@Model.Description" asp-for="Description"/>
+                    <span class="error-message" asp-validation-for="Description"></span>
+                </li>
+            </ul>
+        </div>
+    </section>
+    
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeUserRole">Изменить</button>
+    <a class="btn btn-secondary" asp-area="Admin" asp-controller="Users" asp-action="UserCard" asp-route-userId="@Model.UserId">Назад</a>
+    
+    <!-- Modal View Changing User Role-->
+
+    <div class="modal fade" id="changeUserRole" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Изменение роли пользователя</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Вы уверены что хотите изменить роль пользователя?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">OK</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

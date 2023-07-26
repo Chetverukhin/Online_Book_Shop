@@ -1,0 +1,147 @@
+﻿@model UserViewModel
+
+<style>
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+
+    .product {
+        display: flex;
+    }
+
+    img {
+        height: 50vh;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    li {
+        display: grid;
+        grid-template-columns: 200px auto;
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .title-info,
+    li input {
+        width: 100%;
+    }
+
+    span {
+        display: inline-flex;
+        width: 220px;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+    }
+
+    title-name {
+        font-weight: bold;
+        align-items: center;
+    }
+
+    .error-message {
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    .validation {
+        list-style-type: none;
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+    .btn-info {
+        color: #fff;
+        background-color: brown;
+        border-color: brown;
+    }
+
+    .btn-info:hover {
+        color: brown;
+        font-weight: bold;
+        background-color: #ffffff;
+        border-color: brown;
+    }
+    .btn-info:not(:disabled):not(.disabled).active, .btn-info:not(:disabled):not(.disabled):active, .show>.btn-info.dropdown-toggle {
+        color: #fff;
+        background-color: brown;
+        border-color: brown;
+    }
+    .btn {
+        margin-top: 20px;
+    }
+
+</style>
+
+<form method="post" asp-area="Admin" asp-controller="Users" asp-action="EditUser">
+    
+    <section class="product">
+
+        <div class="title-info">
+            <ul>
+                <li>
+                    <input type="hidden" value="@Model.Id" asp-for="Id"/>
+                </li>
+                <li>
+                    <span>Имя</span>
+                    <input value="@Model.UserName" asp-for="UserName"/>
+                    <span class="error-message" asp-validation-for="UserName"></span>
+                </li>
+
+                <li>
+                    <span>Фамилия</span>
+                    <input value="@Model.LastName" asp-for="LastName"/>
+                    <span class="error-message" asp-validation-for="LastName"></span>
+                </li>
+                <li>
+                    <span>Отчество</span>
+                    <input value="@Model.Patronymic" asp-for="Patronymic"/>
+                    <span class="error-message" asp-validation-for="Patronymic"></span>
+                </li>
+                <li>
+                    <span>Логин (email)</span>
+                    <input value="@Model.Email" asp-for="Email"/>
+                    <span class="error-message" asp-validation-for="Email"></span>
+                </li>
+                <li>
+                    <span>Телефон</span>
+                    <input value="@Model.PhoneNumber" asp-for="PhoneNumber"/>
+                    <span class="error-message" asp-validation-for="PhoneNumber"></span>
+                </li>
+                <li>
+                    <span>Дата рождения</span>
+                    <input type="datetime" value="@Model.BirthDate.ToString("dd-MM-yyyy")" asp-for="BirthDate"/>
+                    <span class="error-message" asp-validation-for="BirthDate"></span>
+                </li>
+                <li>
+                    <span>Пол</span>
+                    <select asp-for="Gender">
+                        <option>Мужской</option>
+                        <option>Женский</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </section>
+    
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+    <button type="submit" class="btn btn-info" data-toggle="modal" data-target="#changeUserPassword">Сохранить</button>
+    <a class="btn btn-secondary" asp-area="Admin" asp-controller="Users" asp-action="UserCard" asp-route-userId="@Model.Id">Назад</a>
+</form>

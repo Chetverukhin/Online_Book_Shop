@@ -1,0 +1,182 @@
+﻿@model CartViewModel
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Site</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+            crossorigin="anonymous"></script>
+    
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        .offer-button:hover {
+            color: white;
+            background-color: #b75454;
+        }
+
+        .offer-button {
+            font-weight: bold;
+            text-align: center;
+            background-color: #a52a2a;
+            color: white;
+            margin: 10px;
+        }
+        .book-price {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .quantity-box button,
+        .quantity-box span {
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            width: 30px;
+            background: none;
+            font-weight: bold;
+            text-align: center;
+            border: solid .1rem lightgray;
+        }
+
+        .quantity-box span {
+            border-top: solid .1rem lightgray;
+            border-bottom: solid .1rem lightgray;
+        }
+
+        .quantity-box {
+            display: inline-flex;
+        }
+
+        .book-price {
+            font-weight: bold
+        }
+
+        .clear-cart {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid !direction !spacing">
+        <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+            <div class="col-9 book-info">
+                <div class="container-fluid !direction !spacing">
+
+                    @if (Model.CartProducts.Count == 0)
+                    {
+                        <h1 style="color: brown; text-align: center">Ваша корзина пока что пустая</h1>
+                    }
+                    else
+                    {
+                        <div class="clear-cart">
+                            <form asp-controller="Cart" asp-action="ClearCart" method="post">
+                                <button class="btn btn-light" type="submit"><i class='bx bx-trash'></i> Удалить всё</button>
+                            </form>
+
+                        </div>
+                    }
+
+                    @foreach (var product in Model.CartProducts)
+                    {
+                        <div style="margin-top: 20px;"
+                             class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                            <div class="col-3 book-cover" style="justify-content: space-around; display: flex;">
+                                <img src="@product.Product.ImageLink" alt="" width="150px">
+                            </div>
+                            <div class="col-4 book-name">
+                                <ul style="list-style: none;">
+                                    <li style="font-weight: bold">@product.Product.Name</li>
+                                    <li>@product.Product.Author</li>
+                                </ul>
+                            </div>
+                            <div class="col-5 book-price">
+                                <div class="quantity-box">
+
+                                    <form asp-controller="Cart" asp-action="DelBookCart" method="post">
+                                        <input type="hidden" value="@product.Product.Id" name="BookId">
+                                        <button type="submit">-</button>
+                                    </form>
+
+                                    <span>@product.Quantity</span>
+
+                                    <form asp-controller="Cart" asp-action="AddBookCart" method="post">
+                                        <input type="hidden" value="@product.Product.Id" name="BookId">
+                                        <button type="submit">+</button>
+                                    </form>
+                                </div>
+
+                                <span>Цена @product.TotalPrice р.</span>
+
+                            </div>
+                        </div>
+                        <hr>
+                    }
+                </div>
+            </div>
+            <div class="col-3 cart-info">
+                <div class="container-fluid !direction !spacing" style="border: 1px solid lightgray;">
+                    <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                        <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                            <div class="col">
+                                <p style="color: lightgray; font-weight: bold;">@Model.CartProducts.Sum(item => item.Quantity) товаров</p>
+                            </div>
+                            <div class="container-fluid !direction !spacing" style="margin-bottom: 50px;">
+                                <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                                    <div class="col">
+                                        <h6>Стоимость</h6>
+                                    </div>
+                                    <div class="col" style="text-align:right; font-weight:bold">
+                                        <h6>@Model.SubTotal р.</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                            <hr>
+                        </div>
+                        <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                            <div class="container-fluid !direction !spacing">
+                                <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                                    <div class="col">
+                                        <h6>Итого без доставки</h6>
+                                    </div>
+                                    <div class="col" style="text-align:right; font-weight:bold">
+                                        <h6>@Model.SubTotal р.</h6>
+                                    </div>
+                                </div>
+                                <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                                    <div class="col">
+                                        <h6>Доставка</h6>
+                                    </div>
+                                    <div class="col" style="text-align:right; font-weight:bold">
+                                        <h6>0 р.</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+                        <div class="col-12" style="text-align: center;">
+                            <a asp-controller="Order" asp-action="Index">
+                                <button type="submit" class="btn offer-button">Перейти к оформлению</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

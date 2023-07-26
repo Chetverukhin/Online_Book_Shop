@@ -1,0 +1,161 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using OnlineShop.Db.Models
+@model OrderViewModel
+
+<style>
+    
+    </style>
+
+<section class="manager-container">
+
+    <div class="manager-navbar">
+
+        <ul class="manager-navigation">
+            @await Html.PartialAsync("ManagerPanel")
+        </ul>
+
+    </div>
+
+    <div class="manager-table">
+
+        <h3>Панель администратора</h3>
+
+        <section class="order">
+            <ul>
+                <li>Номер Заказа</li>
+                <li>Дата создания заказа</li>
+                <li>Адрес доставки</li>
+                <li>Имя получателя</li>
+                <li>Фамилия получателя</li>
+                <li>Email</li>
+                <li>Сумма заказа</li>
+                <li>Статус заказа</li>
+            </ul>
+
+            <ul>
+                <li>@Model.Id</li>
+                <li>@Model.CreatedDate</li>
+                <li>@Model.Info.Address</li>
+                <li>@Model.Info.Name</li>
+                <li>@Model.Info.LastName</li>
+                <li>@Model.Info.Email</li>
+                <li>@Model.Products.Sum(product => product.TotalPrice)</li>
+                <li>
+                    <form asp-area="Admin" asp-controller="Orders" asp-action="EditOrder">
+                        <select asp-for="Status" asp-items="@Html.GetEnumSelectList<EnumOrderStatuses>()" name="status"></select>
+                        <input type="hidden" value="@Model.Id" name="orderId"/>
+                        <button type="submit">Изменить статус заказа</button>
+                    </form>
+                </li>
+            </ul>
+
+
+        </section>
+    </div>
+</section>
+
+<style>
+    .manager-container { 
+        display: flex;
+        height: 100vh;
+    }
+
+    .manager-navbar {
+        width: 150px;
+        border-right: solid .1rem lightgray
+    }
+
+    .manager-navigation {
+        list-style-type:none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .manager-table {
+        justify-content: center;
+        width: 100vw;
+    }
+
+    h3 {
+        text-align:center;
+    }
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+
+    .order{
+        display: grid;
+        grid-template-columns: auto 1fr;
+        padding-left: 50px;
+        gap: 50px
+    }
+
+    ul:nth-child(1) {
+        font-weight: bold;
+        margin-right: 50px;
+    }
+
+    li:nth-child(1) {
+        font-weight: bold;
+        color: brown;
+        font-size: 16px;
+        text-align:start;
+    }
+
+    ul, li {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 20px;
+    }
+
+    .btn-block:hover {
+        color: white;
+        background-color: #b75454;
+    }
+
+    .btn-block {
+        font-weight: bold;
+        text-align: center;
+        background-color: #a52a2a;
+        color: white;
+        margin: 10px;
+        border: none;
+        width: auto;
+    }
+
+    .error-message {
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    .validation ul {
+        list-style-type: none;
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+</style>
+
+@section Scripts {
+<script>
+    // переопределение валидации на стороне клиента
+    $.validator.methods.range = function (value, element, param) {
+        var globalizedValue = value.replace(",", ".");
+        return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+    }
+
+    $.validator.methods.number = function (value, element) {
+        return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+    }
+</script>
+}

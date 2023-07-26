@@ -1,0 +1,196 @@
+﻿@model ProductViewModel
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Site</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+            crossorigin="anonymous"></script>
+    <style>
+        ul{
+            list-style: none;
+            padding: 0px;
+            font-size: 150%;
+            margin-bottom: 50px;
+        }
+        li{
+            margin-bottom: 20px;
+        }
+        .specification-list{
+            font-weight: bold;
+        }
+        .annotation{
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cart{
+            text-align: center;
+        }
+        .cart {
+            border: 1px solid lightgray;
+            padding: 2%;
+        }
+        .cart-button {
+            font-weight: bold;
+            text-align: center;
+            background-color: #a52a2a;
+            color: white;
+        }
+        .cart-button:hover{
+            color: white;
+            background-color: #b75454;
+        }
+        .cart-box-favorite {
+            font-size: 14px;
+        }
+        .status {
+            text-align: left;
+            color: #a52a2a;
+            font-size: 70%;
+        }
+        .price {
+            font-weight: bold;
+            font-size: 120%;
+        }
+        
+    </style>
+</head>
+
+<body>
+    
+<div class="container">
+    <label for="book-picture">
+        <h2> @Model.Author: @Model.Name</h2>
+    </label>
+    <div class="row">
+
+        <div class="col-6 book-picture">
+            <img src="@Model.ImageLink" alt="@Model.Name" height="500px">
+        </div>
+
+        <div class="col-auto">            
+            <div class="container">                
+                <label for="decription">
+                    <h2>Характеристики</h2>
+                </label>
+                <div class="row decription">
+                    <div class="col spec-book">
+                        <ul class="specification-list">
+                            <li>Автор:</li>
+                            <li>Жанр:</li>
+                            <li>Количество страниц:</li>
+                            <li>Год издания:</li>
+                            <li>ISBN:</li>
+                        </ul>
+                    </div>
+                    <div class="col value-book">
+                        <ul class="value-list">
+                            <li>@Model.Author</li>
+                            <li>@Model.Genre</li>
+                            <li>@Model.Pages</li>
+                            <li>@Model.Year</li>
+                            <li>@Model.Isbn</li>
+                        </ul>
+                    </div>
+                </div>
+                <label for="about">
+                    <h2>О товаре</h2>
+                </label>
+                <div class="row about">
+                    <div class="col-6 about-book">
+                        <p class="about-book annotation">
+                            @Model.Description
+                        </p>
+                    </div>
+                    <div class="col-6 cart">
+                        <ul class="cart-box">
+                            <li class="status">В наличии</li>
+                            <li class="price">@Model.Cost руб.</li>                            
+                            <li class="cart-box-button">
+                                <form asp-controller="Cart" asp-action="AddBookCart" method="post">
+                                    <input type="hidden" value="@Model.Id" name="BookId"/>
+                                    <button type="submit" class="btn cart-button">Добавить в корзину</button>
+                                </form>
+                            </li>                            
+                            <li>
+                                <button type="button" class="btn cart-box-favorite">Добавить в избранное</button>
+                            </li>
+                        </ul>                        
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+    
+    <p>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-controller="Product" asp-action="AddFeedBack" method="post">
+                <input type="hidden" value="@Model.Id" name="BookId"/>
+                <button type="submit" class="btn cart-button">Оставить отзыв</button>
+                </form>
+        }
+        else
+        {
+            <button type="button" class="btn cart-button" data-toggle="modal" data-target="#addFeedBack">Оставить отзыв</button>
+        }
+    </p>
+    
+    <div class="row">
+        @if (Model.FeedBacks.Any())
+        {
+            @foreach (var feedback in Model.FeedBacks)
+            {
+                <ul>
+                    <li>Имя пользователя: @feedback.UserId</li>
+                    <li><i class="bx bxs-star" style="color: #cd5c5c"></i>@feedback.Grade</li>
+                    <li><textarea style="display: flex">@feedback.Text</textarea></li>
+                </ul>
+            }
+        }
+        else
+        {
+            <p>Никто еще не оставил отзыв</p>
+        }
+    </div>
+</div>
+
+<!-- MODAL VIEW-->
+<div class="modal fade" id="addFeedBack" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <!-- MODAL VIEW HEADER-->
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Внимание</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- MODAL VIEW BODY-->
+            <div class="modal-body">
+                <section class="modal-card-role">
+                    <h6>Для того чтобы добавить отзыв необходимо авторизоваться</h6>
+                </section>
+            </div>
+
+            <!-- MODAL VIEW FOOTER-->
+            <div class="modal-footer">
+                <a type="button" class="btn cart-button" asp-controller="Enter" asp-action="Authorization">Авторизация</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

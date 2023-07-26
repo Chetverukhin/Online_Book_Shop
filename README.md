@@ -1,2 +1,1 @@
-# Online_Book_Shop
-online shop project
+# ASP.NET_Core_5.0

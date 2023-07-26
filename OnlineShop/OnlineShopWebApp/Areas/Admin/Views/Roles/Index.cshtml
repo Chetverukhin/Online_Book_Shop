@@ -1,0 +1,225 @@
+﻿@model RoleManagingViewModel
+<style>
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+
+    .manager-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .manager-navbar {
+        width: 150px;
+        border-right: solid .1rem lightgray
+    }
+
+    .manager-navigation {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .manager-table {
+        justify-content: center;
+        width: 100vw;
+        overflow-y: scroll;
+    }
+
+    h3 {
+        text-align: center;
+    }
+
+    .btn-block:hover {
+        color: white;
+        background-color: #b75454;
+    }
+
+    .btn-block {
+        font-weight: bold;
+        text-align: center;
+        justify-content: center;
+        background-color: #a52a2a;
+        color: white;
+        margin: 10px auto;
+        border: none;
+        width: auto;
+        border-radius: 2px;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .error-message {
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    .validation ul {
+        list-style-type: none;
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    .btn-role {
+        display: inline-block;
+
+    }
+
+    .role-card {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        grid-template-columns: repeat(4, 1fr);
+        font-weight: bold;
+        align-items: center;
+        justify-items: center;
+        border-bottom: solid .1px lightgray;
+    }
+</style>
+<section class="manager-container">
+
+    <div class="manager-navbar">
+
+        <ul class="manager-navigation">
+            @await Html.PartialAsync("ManagerPanel")
+        </ul>
+
+    </div>
+
+    <div class="manager-table">
+        <h3>Список Ролей</h3>
+        <button type="button" class="btn-block" data-toggle="modal" data-target="#addRole">Добавить роль</button>
+
+        <div>
+            <ul class="role-card">
+                <li>Название роли</li>
+                <li>Описание роли</li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+        <div class="workbench">
+            @foreach (var role in Model.Roles)
+            {
+                var cardId = "editRole" + role.Id;
+                <div>
+                    <ul class="role-card">
+                        <li>@role.Name</li>
+                        <li>@role.Description</li>
+
+                        <li>
+                            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#@cardId">Редактировать</button>
+
+                            <!-- MODAL VIEW-->
+                            <form method="post" asp-area="Admin" asp-controller="Roles" asp-action="EditRole">
+
+                                <div class="modal fade" id="@cardId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+
+                                            <!-- MODAL VIEW HEADER-->
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Редактирование роли</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- MODAL VIEW BODY-->
+
+                                            <div class="modal-body">
+                                                <section class="modal-card-role">
+                                                    <ul>
+                                                        <li>
+                                                            <input type="hidden" value="@role.Id" name="Id" asp-for="@Model.Role.Id"/>
+                                                        </li>
+                                                        <li>
+                                                            <span>Название роли</span>
+                                                            <input style="width: 100%; resize: none" value="@role.Name" name="Name" asp-for="@Model.Role.Name">
+                                                            <span class="error-message" asp-validation-for="Role.Name"></span>
+                                                        </li>
+                                                        <li>
+                                                            <span>Описание Роли</span>
+                                                            <input style="width: 100%; resize: none" value="@role.Description" name="Description" asp-for="@Model.Role.Description"/>
+                                                            <span class="error-message" asp-validation-for="Role.Description"></span>
+                                                        </li>
+                                                    </ul>
+                                                </section>
+
+                                                <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+                                            </div>
+                                            <!-- MODAL VIEW FOOTER-->
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn-block">Сохранить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                        <li>
+                            <a asp-area="Admin" asp-controller="Roles" asp-action="DeleteRole" asp-route-roleId="@role.Id" class="btn btn-danger">Удалить</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+        </div>
+
+        <!-- MODAL VIEW-->
+        <form method="post" asp-area="Admin" asp-controller="Roles" asp-action="AddRole">
+            <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <!-- MODAL VIEW HEADER-->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Добавление роли</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- MODAL VIEW BODY-->
+
+                        <div class="modal-body">
+                            <section class="modal-card-role">
+                                <ul>
+                                    <li>
+                                        <span>Название роли</span>
+                                        <input style="width: 100%; resize: none" name="Name" asp-route-roleId="@Model.Role.Name">
+                                        <span class="error-message" asp-validation-for="Role.Name"></span>
+                                    </li>
+                                    <li>
+                                        <span>Описание Роли</span>
+                                        <textarea style="width: 100%; resize: none" name="Description" asp-for="@Model.Role.Description"></textarea>
+                                        <span class="error-message" asp-validation-for="Role.Description"></span>
+                                    </li>
+                                </ul>
+                            </section>
+
+                            <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+                        </div>
+                        <!-- MODAL VIEW FOOTER-->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn-block">Добавить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

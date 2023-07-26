@@ -1,0 +1,172 @@
+﻿@model UserViewModel
+<style>
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+
+    .manager-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .manager-navbar {
+        width: 150px;
+        border-right: solid .1rem lightgray
+    }
+
+    .manager-navigation {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .manager-table {
+        justify-content: center;
+        width: 100vw;
+    }
+
+    h3 {
+        text-align: center;
+    }
+    thead tr {
+        font-weight: bold;
+        color: brown;
+    }
+    td, th {
+        text-align: center;
+    }
+
+    #order-card {
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    #order-card:hover {
+        color: brown;
+    }
+
+    .workbench {
+        display: grid;
+        grid-template-columns: 200px auto;
+        margin-left: 50px;
+        gap: 20px;
+    }
+
+    .user-attributes {
+        color: brown;
+        font-weight: bold;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: brown;
+        border-color: brown;
+    }
+
+    .btn-info:hover {
+        color: brown;
+        font-weight: bold;
+        background-color: #ffffff;
+        border-color: brown;
+    }
+    .btn-info:not(:disabled):not(.disabled).active, .btn-info:not(:disabled):not(.disabled):active, .show>.btn-info.dropdown-toggle {
+        color: #fff;
+        background-color: brown;
+        border-color: brown;
+    }
+
+    .modal-view {
+        cursor: pointer;
+    }
+
+    .modal-card-role ul {
+    list-style:none;
+    margin: 0;
+    padding:0;
+    }
+
+    .error-message {
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    .validation {
+        list-style-type: none;
+        color: #a52a2a;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 10px 0;
+        padding: 0;
+    }
+</style>
+
+<section class="manager-container">
+
+    <div class="manager-navbar">
+
+        <ul class="manager-navigation">
+            @await Html.PartialAsync("ManagerPanel")
+        </ul>
+
+    </div>
+
+    <div class="manager-table">
+
+        <h3>Пользователь @Model.Email</h3>
+
+        <div class="workbench">
+            <span class="user-attributes">Email Пользователя</span>
+            <span>@Model.Email</span>
+            <span class="user-attributes">Имя</span>
+            <span>@Model.UserName</span>
+            <span class="user-attributes">Фамилия</span>
+            <span>@Model.LastName</span>
+            <span class="user-attributes">Номер телефона</span>
+            <span>@Model.PhoneNumber</span>
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Действия
+            </button>
+            <span></span>
+            <a class="btn btn-secondary" asp-area="Admin" asp-controller="Users" asp-action="Index">Назад</a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="ChangePassword" asp-route-userId="@Model.Id">Сменить пароль</a>
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="EditUser" asp-route-userId="@Model.Id">Редактирование данных</a>
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="SetRole" asp-route-userId="@Model.Id">Права доступа</a>
+                <a class="dropdown-item modal-view" data-toggle="modal" data-target="#deleteUser">Удалить пользователя</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Confirm Deleting User-->
+<form asp-area="Admin" asp-controller="Users" asp-action="DeleteUser" asp-route-userId="@Model.Id">
+    <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Удаление пользователя</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Вы уверены что хотите удалить пользователя?</p>
+                    <p>@Model.UserName</p>
+                    <p>@Model.Email</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">OK</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

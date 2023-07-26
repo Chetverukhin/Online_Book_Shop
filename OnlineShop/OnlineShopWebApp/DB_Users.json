@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 0,
+    "Name": "Stas",
+    "LastName": "Che",
+    "Email": "ajaxstas@gmail.com",
+    "Phone": "89618169966",
+    "Password": "1123581321C#",
+    "ConfirmPassword": "1123581321C#",
+    "Patronymic": "Alex",
+    "BirthDate": "1987-01-25T00:00:00",
+    "Gender": "Мужской"
+  },
+  {
+    "Id": 1,
+    "Name": "Nika",
+    "LastName": "Che",
+    "Email": "nika_che@gmail.com",
+    "Phone": "89371315375",
+    "Password": "1123581321Nika",
+    "ConfirmPassword": "1123581321Nika",
+    "Patronymic": "Alex",
+    "BirthDate": "2023-05-01T00:00:00",
+    "Gender": "Женский"
+  }
+]

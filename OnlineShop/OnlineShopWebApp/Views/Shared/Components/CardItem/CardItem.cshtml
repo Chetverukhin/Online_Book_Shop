@@ -1,0 +1,82 @@
+﻿@model ProductViewModel
+
+<style>
+    a,
+    a:active {
+        text-decoration: none;
+        color: black;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: brown;
+    }
+
+    .book-img {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .book-img:hover {
+        opacity: 0.9;
+    }
+
+    .buttons {
+        display: flex;
+    }
+
+    .cart-button {
+        font-weight: bold;
+        background-color: #a52a2a;
+        color: white;
+    }
+
+    .cart-button:hover {
+        color: white;
+        background-color: #b75454;
+    }
+
+    .cart-box-favorite {
+        padding-left: 20px;
+    }
+    .card-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .card {
+        width: 18rem; 
+        border: none; 
+        margin-bottom: 20px
+    }
+</style>
+
+<div class="card">
+
+    <a asp-controller="product" asp-action="index" asp-route-bookId="@Model.Id">
+        <img class="book-img" src="@Model.ImageLink" height="300px" alt="@Model.Name"/>
+    </a>
+
+    <div class="card-body">
+
+        <h5 class="card-price">@Model.Cost руб.</h5>
+
+        <a asp-controller="product" asp-action="index" asp-route-bookId="@Model.Id">
+            <h5 class="card-title">@Model.Name</h5>
+        </a>
+
+        <h6 class="card-subtitle mb-2 text-muted ">@Model.Author</h6>
+
+        <div class="buttons">
+
+            <form asp-controller="Cart" asp-action="AddBookCart" method="post">
+                <input type="hidden" value="@Model.Id" name="BookId"/>
+                <button type="submit" class="btn cart-button">В корзину</button>
+            </form>
+
+            <button type="button" class="btn cart-box-favorite">
+                <img class="heart" src="img/heart-empty.svg"/>
+            </button>
+
+        </div>
+    </div>
+</div>

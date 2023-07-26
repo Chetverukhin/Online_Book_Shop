@@ -1,0 +1,98 @@
+﻿@model List<OrderViewModel>
+<style>
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+
+    .manager-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .manager-navbar {
+        width: 150px;
+        border-right: solid .1rem lightgray
+    }
+
+    .manager-navigation {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .manager-table {
+        justify-content: center;
+        width: 100vw;
+    }
+
+    h3 {
+        text-align: center;
+    }
+    thead tr {
+        font-weight: bold;
+        color: brown;
+    }
+    td, th {
+        text-align: center;
+    }
+
+    #order-card {
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    #order-card:hover {
+        color: brown;
+    }
+
+</style>
+
+<section class="manager-container">
+
+    <div class="manager-navbar">
+
+        <ul class="manager-navigation">
+            @await Html.PartialAsync("ManagerPanel")
+        </ul>
+
+    </div>
+
+    <div class="manager-table">
+
+        <h3>Панель Заказов</h3>
+
+        <div class="workbench">
+            <table class="table table-hover">
+
+                <thead>
+                <tr>
+                    <th>Номер Заказа</th>
+                    <th>Сумма заказа</th>
+                    <th>Почта пользователя</th>
+                    <th>Статус заказа</th>
+                    <th>Дата оформления</th>
+                    <th>Время</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>
+                            <a id="order-card" asp-area="Admin" asp-controller="Orders" asp-action="EditOrder" asp-route-orderId="@order.Id">@order.Id</a>
+                        </td>
+                        <td>@order.Products.Sum(product => product.TotalPrice).ToString("C2")</td>
+                        <td>@order.Info.Email</td>
+                        <td>@EnumHelper.GetAttributeName(order.Status)</td>
+                        <td>@order.CreatedDate.ToShortDateString()</td>
+                        <td>@order.CreatedDate.ToShortTimeString()</td>
+                    </tr>
+                }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</section>

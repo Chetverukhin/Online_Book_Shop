@@ -1,0 +1,152 @@
+﻿@model List<ProductViewModel>
+
+<style>
+    .container {
+        margin: 0 5%;
+        padding: 0;
+    }
+    
+    .manager-container { 
+        display: flex;
+        height: 100vh;
+    }
+    
+    .manager-navbar {
+        width: 150px;
+        border-right: solid .1rem lightgray
+    }
+    
+    .manager-navigation {
+        list-style-type:none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .manager-table {
+        justify-content: center;
+        width: 100vw;
+        overflow-y: scroll;
+    }
+
+    h3 {
+        text-align:center;
+    }
+
+    .image a{
+        height: 60px;
+        width: 60px;
+    }
+
+    .image a img {
+        height: 100%;
+    }
+
+    .image a img:hover {
+        opacity: .8;
+    }
+
+    .product {
+        display: flex;
+        padding: 20px 0;
+        border-bottom: lightgray solid .1rem;
+    }
+
+    .item {
+        margin-left: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .info a{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        width: 300px;
+    }
+
+    .price {
+        width: 100px;
+        color: brown;
+        font-weight: bold;
+    }
+
+    span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #add-product{
+        text-align: center;
+    }
+
+    .product-remove {
+        border: none; 
+        color: brown; 
+        background: none;
+        font-weight: bold;
+    }
+    .product-remove:hover {
+        color: azure;
+        background: brown;
+    }
+</style>
+    
+<section class="manager-container">
+    
+    <div class="manager-navbar">
+    
+        <ul class="manager-navigation">
+            @await Html.PartialAsync("ManagerPanel")
+        </ul>
+    
+    </div>
+    
+    <div class="manager-table">
+    
+        <h3>Панель Товаров</h3>
+        <div id="add-product">
+            <a asp-area="Admin" asp-controller="Products" asp-action="AddProduct" >Добавить новый товар +</a>
+        </div>
+    
+        <div class="workbench">
+            @foreach (var book in Model)
+            {
+                <div class="product">
+
+                    <div class="item image">
+                        <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-bookId="@book.Id">
+                            <img src="@book.ImageLink" alt=""/>
+                        </a>
+                    </div>
+
+                    <div class="item info">
+                        <a asp-area="" asp-controller="Product" asp-action="Index" asp-route-bookId="@book.Id">
+                            <span>@book.Name</span>
+                            <span>@book.Author</span>
+                        </a>
+                    </div>
+
+                    <div class="item price">
+                        <span>@book.Cost р.</span>
+                    </div>
+
+                    <div class="item edite">
+                        <a asp-area="Admin" asp-controller="Products" asp-action="EditProduct" asp-route-bookId="@book.Id">Редактировать</a>
+                    </div>
+
+                    <div class="item delete">
+                        <form asp-area="Admin" asp-controller="Products" asp-action="RemoveProduct">
+
+                            <input type="hidden" value="@book.Id" name="bookId"/>
+                            <button class="product-remove" type="submit">Удалить</button>
+                        </form>
+                    </div>
+
+                </div>
+            }
+        </div>
+    
+    </div>
+</section>

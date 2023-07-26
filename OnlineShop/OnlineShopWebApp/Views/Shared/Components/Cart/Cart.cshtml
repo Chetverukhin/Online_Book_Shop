@@ -1,0 +1,14 @@
+﻿@model int
+
+@if (Model == 0)
+{
+    <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+}
+else
+{
+    <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart
+        <span style="background-color: #a52a2a!important;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            @Model
+        </span>
+    </a>    
+}
