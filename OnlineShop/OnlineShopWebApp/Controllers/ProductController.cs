@@ -34,21 +34,16 @@ namespace OnlineShopWebApp.Controllers
         {
             var feedBack = new List<FeedBackViewModel>();
 
-            try
-            {
-                var requestUri = $"https://localhost:7274/FeedBack/GetFeedBacksByProductId?productId={productId}";
-                var response = await _client.GetAsync(requestUri);
+            //Работает только в Docker
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    feedBack = JsonConvert.DeserializeObject<List<FeedBackViewModel>>(content);
-                }
-            }
-            catch
-            {
+            //var requestUri = $"https://localhost:7274/FeedBack/GetFeedBacksByProductId?productId={productId}";
+            //var response = await _client.GetAsync(requestUri);
 
-            }
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var content = await response.Content.ReadAsStringAsync();
+            //    feedBack = JsonConvert.DeserializeObject<List<FeedBackViewModel>>(content);
+            //}
 
             return feedBack;
         }
@@ -75,14 +70,9 @@ namespace OnlineShopWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> AddFeedBack(FeedBackViewModel feedBack)
         {
-            try
-            {
-                var response = await _client.PostAsJsonAsync("https://localhost:7274/FeedBack/AddNewFeedBack", feedBack);
-            }
-            catch
-            {
+            //Работает только в Docker
 
-            }            
+            //var response = await _client.PostAsJsonAsync("https://localhost:7274/FeedBack/AddNewFeedBack", feedBack);
 
             return RedirectToAction("Index", "Product", new { bookId = feedBack.ProductId });
         }
